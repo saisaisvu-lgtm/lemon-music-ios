@@ -1,0 +1,47 @@
+name: Build iOS IPA
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-ipa:
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Build unsigned IPA
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project LemonMusic.xcodeproj \
+            -scheme LemonMusic \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath build/LemonMusic.xcarchive \
+            archive \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_IDENTITY="" \
+            DEVELOPMENT_TEAM=""
+          bash scripts/package-ipa.sh build/LemonMusic.xcarchive build/LemonMusic.ipa
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LemonMusic-ipa
+          path: build/LemonMusic.ipa
+          if-no-files-found: error
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/LemonMusic.ipa
+          generate_release_notes: true
