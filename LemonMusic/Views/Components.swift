@@ -101,7 +101,7 @@ struct EmptyListView: View {
 // MARK: - 简单分页加载器
 
 @MainActor
-final class PagedLoader<Item>: ObservableObject {
+final class PagedLoader<Item: Codable>: ObservableObject {
     @Published var items: [Item] = []
     @Published var total = 0
     @Published var isLoading = false
