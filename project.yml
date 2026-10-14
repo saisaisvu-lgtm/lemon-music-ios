@@ -1,0 +1,46 @@
+# XcodeGen 备用工程定义（当预生成的 LemonMusic.xcodeproj 无法使用时）
+# 用法：brew install xcodegen && xcodegen generate
+name: LemonMusic
+options:
+  bundleIdPrefix: com.lemonmusic
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    TARGETED_DEVICE_FAMILY: "1,2"
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_STYLE: Automatic
+targets:
+  LemonMusic:
+    type: application
+    platform: iOS
+    sources:
+      - path: LemonMusic
+    info:
+      path: Config/Info.plist
+      properties:
+        CFBundleDisplayName: 柠檬音乐
+        UIBackgroundModes:
+          - audio
+        NSAppTransportSecurity:
+          NSAllowsArbitraryLoads: true
+        UILaunchScreen: {}
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.lemonmusic.ios
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        ENABLE_PREVIEWS: YES
+schemes:
+  LemonMusic:
+    build:
+      targets:
+        LemonMusic: all
+    run:
+      config: Debug
+    archive:
+      config: Release
